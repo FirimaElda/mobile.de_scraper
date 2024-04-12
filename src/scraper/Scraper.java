@@ -13,9 +13,16 @@ import java.util.List;
 public class Scraper {
 
     private String url;
+    private Properties selectors;
 
     public Scraper(String url) {
         this.url = url;
+        this.selectors = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            selectors.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public List<CarListing> scrape() {
@@ -32,16 +39,16 @@ public class Scraper {
             // Navigate to the car listings page
             driver.get(url);
 
-            // Find the car listings (replace with actual CSS selector)
-            List<WebElement> listings = driver.findElements(By.cssSelector(".car-listing"));
+            // Find the car listings using the CSS selector from the properties file
+            List<WebElement> listings = driver.findElements(By.cssSelector(selectors.getProperty("carListingSelector")));
 
             // Iterate over each listing
             for (WebElement listing : listings) {
-                // Extract the car details (replace with actual CSS selectors)
-                String make = listing.findElement(By.cssSelector(".make")).getText();
-                String model = listing.findElement(By.cssSelector(".model")).getText();
-                int year = Integer.parseInt(listing.findElement(By.cssSelector(".year")).getText());
-                double price = Double.parseDouble(listing.findElement(By.cssSelector(".price")).getText());
+                // Extract the car details using the CSS selectors from the properties file
+                String make = listing.findElement(By.cssSelector(selectors.getProperty("makeSelector"))).getText();
+                String model = listing.findElement(By.cssSelector(selectors.getProperty("modelSelector"))).getText();
+                int year = Integer.parseInt(listing.findElement(By.cssSelector(selectors.getProperty("yearSelector"))).getText());
+                double price = Double.parseDouble(listing.findElement(By.cssSelector(selectors.getProperty("priceSelector"))).getText());
 
                 // Create a new CarListing object and add it to the list
                 CarListing carListing = new CarListing(make, model, year, price);
