@@ -1,7 +1,5 @@
-package src.main;
-
-import src.model.CarListing;
-import src.scraper.Scraper;
+import model.CarListing;
+import scraper.Scraper;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class ScraperApp {
 
         // Print the car listings
         for (CarListing carListing : carListings) {
-            System.out.println(carListing);
+            System.out.println(carListing.toStringUsingStringAttributes());
         }
     }
 }

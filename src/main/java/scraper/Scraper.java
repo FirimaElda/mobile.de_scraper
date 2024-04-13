@@ -1,14 +1,22 @@
-package src.scraper;
+package scraper;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import src.model.CarListing;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import model.CarListing;
+import util.CarListingParser;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Properties;
 
 public class Scraper {
 
@@ -39,19 +47,30 @@ public class Scraper {
             // Navigate to the car listings page
             driver.get(url);
 
+            // Fluent Wait
+            Wait<WebDriver> wait = new FluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(30))
+                    .pollingEvery(Duration.ofSeconds(5))
+                    .ignoring(NoSuchElementException.class);
+
             // Find the car listings using the CSS selector from the properties file
-            List<WebElement> listings = driver.findElements(By.cssSelector(selectors.getProperty("carListingSelector")));
+            List<WebElement> listings = wait.until(d -> {
+                List<WebElement> elements = d.findElements(By.cssSelector(selectors.getProperty("carListingSelector")));
+                return !elements.isEmpty() ? elements : null;
+            });
 
             // Iterate over each listing
             for (WebElement listing : listings) {
                 // Extract the car details using the CSS selectors from the properties file
-                String make = listing.findElement(By.cssSelector(selectors.getProperty("makeSelector"))).getText();
-                String model = listing.findElement(By.cssSelector(selectors.getProperty("modelSelector"))).getText();
-                int year = Integer.parseInt(listing.findElement(By.cssSelector(selectors.getProperty("yearSelector"))).getText());
-                double price = Double.parseDouble(listing.findElement(By.cssSelector(selectors.getProperty("priceSelector"))).getText());
+                String title = listing.findElement(By.cssSelector(selectors.getProperty("titleSelector"))).getText();
+                //String model = listing.findElement(By.cssSelector(selectors.getProperty("modelSelector"))).getText();
+                String year = listing.findElement(By.cssSelector(selectors.getProperty("yearSelector"))).getText();
+                String price = listing.findElement(By.cssSelector(selectors.getProperty("priceSelector"))).getText();
 
                 // Create a new CarListing object and add it to the list
-                CarListing carListing = new CarListing(make, model, year, price);
+                CarListing carListing = new CarListing();
+                carListing.setListingTitle(title);
+                carListing = CarListingParser.parseDetails(carListing, year);
                 carListings.add(carListing);
             }
         } finally {
