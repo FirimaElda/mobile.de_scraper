@@ -21,6 +21,7 @@ public class ScraperApp {
         List<CarListing> carListings = scraper.scrape();
 
         // Print the car listings
+        System.out.println("Found " + carListings.size() + " car listings:");
         for (CarListing carListing : carListings) {
             System.out.println(carListing.toStringUsingStringAttributes());
         }

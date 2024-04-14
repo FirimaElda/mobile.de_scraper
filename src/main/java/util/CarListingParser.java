@@ -17,16 +17,10 @@ public class CarListingParser {
             String yearString = matcher.group(1);
             String kmString = matcher.group(2);
             String kWString = matcher.group(3);
-            System.out.println(input);
-            System.out.println("Parsing details...");
-            System.out.println(yearString);
-            System.out.println(kmString);
-            System.out.println(kWString);
             carListing.setYearString(yearString);
             carListing.setKilometresString(kmString);
             carListing.setKilowattsString(kWString);
-            return carListing;
         }
-        return null;
+        return carListing;
     }
 }
