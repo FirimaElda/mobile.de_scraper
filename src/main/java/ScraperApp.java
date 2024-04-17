@@ -1,6 +1,8 @@
 import model.CarListing;
 import scraper.Scraper;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class ScraperApp {
@@ -24,6 +26,19 @@ public class ScraperApp {
         System.out.println("Found " + carListings.size() + " car listings:");
         for (CarListing carListing : carListings) {
             System.out.println(carListing.toStringUsingStringAttributes());
+            System.out.println(carListing);
         }
+
+        System.out.println("Average price: " + calculateCarListingAveragePrice(carListings) + " €");
+        calculateCarListingAveragePrice(carListings);
+    }
+
+    private static BigDecimal calculateCarListingAveragePrice(List<CarListing> carListings) {
+        double averagePrice = carListings.stream()
+                .mapToDouble(CarListing::getPrice)
+                .average()
+                .orElse(0);
+        BigDecimal averagePriceBigDecimal = BigDecimal.valueOf(averagePrice);
+        return averagePriceBigDecimal.setScale(2, RoundingMode.HALF_UP);
     }
 }

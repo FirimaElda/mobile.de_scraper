@@ -1,11 +1,13 @@
 package model;
 
+import java.util.Date;
+
 public class CarListing {
 
     private String listingTitle;
     private String make;
     private String model;
-    private int year;
+    private Date year;
     private String yearString;
     private double price;
     private String priceString;
@@ -17,7 +19,7 @@ public class CarListing {
     public CarListing() {
     }
 
-    public CarListing(String listingTitle, String make, String model, int year, double price) {
+    public CarListing(String listingTitle, String make, String model, Date year, double price) {
         this.listingTitle = listingTitle;
         this.make = make;
         this.model = model;
@@ -59,11 +61,11 @@ public class CarListing {
         this.model = model;
     }
 
-    public int getYear() {
+    public Date getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Date year) {
         this.year = year;
     }
 
@@ -138,10 +140,13 @@ public class CarListing {
     @Override
     public String toString() {
         return "CarListing{" +
-                "make='" + make + '\'' +
+                "listingTitle='" + listingTitle + '\'' +
+                ", make='" + make + '\'' +
                 ", model='" + model + '\'' +
                 ", year=" + year +
                 ", price=" + price +
+                ", kilometres=" + kilometres +
+                ", kilowatts=" + kilowatts +
                 '}';
     }
 }

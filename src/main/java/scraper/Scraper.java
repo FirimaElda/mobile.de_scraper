@@ -83,14 +83,14 @@ public class Scraper {
                 for (WebElement listing : listings) {
                     // Extract the car details using the CSS selectors from the properties file
                     String title = listing.findElement(By.cssSelector(selectors.getProperty("titleSelector"))).getText();
-                    String year = listing.findElement(By.cssSelector(selectors.getProperty("yearSelector"))).getText();
+                    String yearKmKwUnparsed = listing.findElement(By.cssSelector(selectors.getProperty("yearSelector"))).getText();
                     String price = listing.findElement(By.cssSelector(selectors.getProperty("priceSelector"))).getText();
 
                     // Create a new CarListing object and add it to the list
                     CarListing carListing = new CarListing();
                     carListing.setListingTitle(title);
-                    carListing.setPriceString(price);
-                    CarListingParser.parseDetails(carListing, year);
+                    CarListingParser.parsePrice(carListing, price);
+                    CarListingParser.parseYearKmKw(carListing, yearKmKwUnparsed);
                     carListings.add(carListing);
                 }
 
